@@ -41,6 +41,7 @@
 
 #include <Accounts/Manager>
 #include <Accounts/Account>
+#include <Accounts/AccountService>
 
 #include <PluginCbInterface.h>
 #include "logging.h"
@@ -282,10 +283,10 @@ Accounts::Account* CalDavClient::getAccountForCalendars(Accounts::Service *servi
         return NULL;
     }
     Accounts::Service calendarService;
-    const Accounts::ServiceList caldavServices = account->services("caldav");
-    for (const Accounts::Service &currService : caldavServices) {
+    const Accounts::ServiceList services = account->services();
+    for (const Accounts::Service &currService : services) {
         account->selectService(currService);
-        if (account->value("caldav-sync/profile_id").toString() == getProfileName()) {
+        if (currService.serviceType().toLower() == QStringLiteral("caldav")) {
             calendarService = currService;
             break;
         }
@@ -484,12 +485,25 @@ bool CalDavClient::initConfig()
         return false;
     }
 
-    mSettings.setServerAddress(account->value("server_address").toString());
+    Accounts::AccountService globalSrv(account, Accounts::Service());
+
+    QString serverAddress = account->value("server_address").toString();
+    QString webDavPath = account->value("webdav_path").toString();
+    if (serverAddress.isEmpty()) {
+        // try with global service settings
+        serverAddress = globalSrv.value("server_address").toString();
+    }
+
+    if (webDavPath.isEmpty()) {
+        webDavPath = globalSrv.value("webdav_path").toString();
+    }
+
+    mSettings.setServerAddress(serverAddress);
     if (mSettings.serverAddress().isEmpty()) {
         qCWarning(lcCalDav) << "remote_address not found in service settings";
         return false;
     }
-    mSettings.setDavRootPath(account->value("webdav_path").toString());
+    mSettings.setDavRootPath(webDavPath);
     mSettings.setIgnoreSSLErrors(account->value("ignore_ssl_errors").toBool());
     account->selectService(Accounts::Service());
 

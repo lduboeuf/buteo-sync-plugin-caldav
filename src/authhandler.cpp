@@ -105,6 +105,12 @@ bool AuthHandler::init()
         return false;
     }
 
+    if (mMethod.isEmpty()) {
+        // try with service properties
+        Accounts::AccountService accSrv(mAccount, srv);
+        mMethod = accSrv.authData().method();
+    }
+
     mSession = mIdentity->createSession(mMethod.toLatin1());
     if (!mSession) {
         qCDebug(lcCalDav) << "Signon session could not be created with method" << mMethod;
