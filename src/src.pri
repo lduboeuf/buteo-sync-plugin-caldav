@@ -3,8 +3,13 @@ QT += network dbus
 
 CONFIG += link_pkgconfig console
 
-PKGCONFIG += buteosyncfw5 libsignon-qt5 accounts-qt5 libsailfishkeyprovider
+PKGCONFIG += buteosyncfw5 libsignon-qt5 accounts-qt5
 PKGCONFIG += signon-oauth2plugin KF5CalendarCore libmkcal-qt5
+
+packagesExist(libsailfishkeyprovider) {
+    PKGCONFIG += libsailfishkeyprovider
+    DEFINES += USE_SAILFISHKEYPROVIDER
+}
 
 INCLUDEPATH += $$PWD
 
