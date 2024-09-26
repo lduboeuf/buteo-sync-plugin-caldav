@@ -1,0 +1,15 @@
+Source: buteo-sync-plugin-caldav
+Section: libs
+Priority: optional
+Maintainer: [Votre nom] <votre.email@example.com>
+Build-Depends: debhelper (>= 12), cmake, pkg-config, qtbase5-dev, qtdeclarative5-dev, libbuteosyncfw5-dev, libsignon-qt5-dev, libaccounts-qt5-dev, signon-plugins-dev, signon-plugin-oauth2-dev, libmkcal-qt5
+Standards-Version: 3.9.8
+Homepage: https://github.com/sailfishos/buteo-sync-plugin-caldav
+Vcs-Git: https://github.com/sailfishos/buteo-sync-plugin-caldav.git
+Vcs-Browser: https://github.com/sailfishos/buteo-sync-plugin-caldav
+
+Package: buteo-sync-plugin-caldav
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libbuteosyncfw5-0
+Description: Buteo plugin for syncing with CalDAV servers
+ This package provides a Buteo plugin to sync calendar data with a CalDAV server.

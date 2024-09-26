@@ -1,0 +1,3 @@
+etc/buteo/profiles/client/caldav.xml
+etc/buteo/profiles/sync/caldav-sync.xml
+usr/lib/*/buteo-plugins-qt5/oopp/*
