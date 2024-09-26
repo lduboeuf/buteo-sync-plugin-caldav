@@ -40,7 +40,9 @@
 #include <ProfileEngineDefs.h>
 #include "logging.h"
 
+#ifdef USE_SAILFISHKEYPROVIDER
 #include <sailfishkeyprovider.h>
+#endif
 
 using namespace Accounts;
 using namespace SignOn;
@@ -102,6 +104,11 @@ bool AuthHandler::init()
         qCWarning(lcCalDav) << "Cannot get existing identity for credentials:" << cId;
         return false;
     }
+
+    qCWarning(lcCalDav) << "before: mMethod" << mMethod << "mMechanism" << mMechanism;
+    Accounts::AccountService accSrv(mAccount, srv);
+    mMethod = accSrv.authData().method();
+    qCWarning(lcCalDav) << "after: mMethod" << mMethod << "mMechanism" << mMechanism;
 
     mSession = mIdentity->createSession(mMethod.toLatin1());
     if (!mSession) {
@@ -233,12 +240,12 @@ QString AuthHandler::storedKeyValue(const char *provider, const char *service, c
 
     char *storedKey = NULL;
     QString retn;
-
+#ifdef USE_SAILFISHKEYPROVIDER
     int success = SailfishKeyProvider_storedKey(provider, service, keyName, &storedKey);
     if (success == 0 && storedKey != NULL && strlen(storedKey) != 0) {
         retn = QLatin1String(storedKey);
     }
-
+#endif
     if (storedKey) {
         free(storedKey);
     }
