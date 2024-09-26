@@ -42,8 +42,9 @@
 #include <SyncPluginLoader.h>
 
 #include <Accounts/Manager>
-
+#ifdef USE_SAILFISHKEYPROVIDER
 #include <sailfishkeyprovider_processmutex.h>
+#endif
 
 class QNetworkAccessManager;
 class Request;
@@ -162,8 +163,9 @@ private:
     Buteo::SyncProfile::ConflictResolutionPolicy conflictResolutionPolicy();
 
     void setCredentialsNeedUpdate(int accountId);
-
+#ifdef USE_SAILFISHKEYPROVIDER
     mutable QScopedPointer<Sailfish::KeyProvider::ProcessMutex> mProcessMutex;
+#endif
     QList<NotebookSyncAgent *>  mNotebookSyncAgents;
     QNetworkAccessManager*      mNAManager;
     Accounts::Manager*          mManager;

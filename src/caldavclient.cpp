@@ -25,8 +25,9 @@
 #include "caldavclient.h"
 #include "propfind.h"
 #include "notebooksyncagent.h"
-
+#ifdef USE_SAILFISHKEYPROVIDER
 #include <sailfishkeyprovider_iniparser.h>
+#endif
 
 #include <extendedcalendar.h>
 #include <extendedstorage.h>
@@ -184,7 +185,7 @@ bool CalDavClient::cleanSyncRequired(int accountId)
 {
     static const QByteArray iniFileDir = cleanSyncMarkersFileDir.toUtf8();
     static const QByteArray iniFile = cleanSyncMarkersFile.toUtf8();
-
+#ifdef USE_SAILFISHKEYPROVIDER
     // multiple CalDavClient processes might be spawned (e.g. sync with different accounts)
     // so use a process mutex to ensure that only one will access the clean sync marker file at any time.
     if (!mProcessMutex) {
@@ -255,6 +256,7 @@ bool CalDavClient::cleanSyncRequired(int accountId)
     }
 
     mProcessMutex->unlock();
+#endif
     return false;
 }
 
