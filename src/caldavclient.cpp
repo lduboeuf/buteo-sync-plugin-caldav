@@ -429,15 +429,24 @@ bool CalDavClient::initConfig()
             qCWarning(lcCalDav) << "Account" << accountId << "is disabled!";
             return false;
         }
-        for (const Accounts::Service &srv : account->enabledServices()) {
+
+//      for (const Accounts::Service &srv : account->enabledServices()) {
+//          if (srv.serviceType().toLower() == QStringLiteral("caldav")) {
+//              account->selectService(srv);
+//              if (account->value("caldav-sync/profile_id").toString() == getProfileName()) {
+//                  mService = QSharedPointer<Accounts::AccountService>(new Accounts::AccountService(account, srv));
+//                  break;
+//              }
+//          }
+//      }
+
+         for (const Accounts::Service &srv: account->enabledServices()) {
             if (srv.serviceType().toLower() == QStringLiteral("caldav")) {
-                account->selectService(srv);
-                if (account->value("caldav-sync/profile_id").toString() == getProfileName()) {
-                    mService = QSharedPointer<Accounts::AccountService>(new Accounts::AccountService(account, srv));
-                    break;
-                }
+                mService = QSharedPointer<Accounts::AccountService>(new Accounts::AccountService(account, srv));
+                break;
             }
-        }
+         }
+
     }
     if (!mService) {
         qCWarning(lcCalDav) << "cannot find enabled caldav service in account" << accountId;
